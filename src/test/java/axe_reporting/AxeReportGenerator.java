@@ -29,7 +29,7 @@ public class AxeReportGenerator {
 	static ReportContent reportContentBean;
 	static String f = System.getProperty("user.dir") + File.separator + "target" + File.separator  + "axe-report.html";
 
-	public static void axe_report_generator(String testingTool, String url, String timestamp, String json_violations) {
+	public static void axe_report_generator(String testingTool, String url, String timestamp, int totalViolations,String json_violations) {
 		try {
 			Version v = Configuration.VERSION_2_3_30;
 			Configuration configuration = new Configuration(v);
@@ -50,7 +50,7 @@ public class AxeReportGenerator {
 
 			JSONParser jsonParser = new JSONParser();
 			JSONArray violationsArray = (JSONArray) jsonParser.parse(json_violations);
-			Iterator<JSONObject> iter_violations = violationsArray.iterator();
+			Iterator<JSONObject> iter_violations = violationsArray.iterator(); //sort this array on severity
 			String content_output = "";
 			while (iter_violations.hasNext()) {
 				JSONObject obj = iter_violations.next();
@@ -79,7 +79,7 @@ public class AxeReportGenerator {
 				sw.close();
 
 			}
-			reportContentBean = new ReportContent(testingTool, url, timestamp, content_output);
+			reportContentBean = new ReportContent(testingTool, url, timestamp,totalViolations, content_output);
 			StringWriter sw = new StringWriter();
 			reportTemp.process(reportContentBean, sw);
 			sw.flush();

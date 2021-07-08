@@ -5,11 +5,13 @@ public class ReportContent {
 	private String url;
 	private String timestamp;
 	private String content;
+	private int totalViolations;
 
-	public ReportContent(String testingTool, String url, String timestamp, String content) {
+	public ReportContent(String testingTool, String url, String timestamp, int totalViolations,String content) {
 		this.testingTool = testingTool;
 		this.url = url;
 		this.timestamp = timestamp;
+		this.totalViolations=totalViolations;
 		this.content = content;
 	}
 
@@ -35,6 +37,14 @@ public class ReportContent {
 
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
+	}
+	
+	public int getTotalViolations() {
+		return totalViolations;
+	}
+
+	public void setTotalViolations(int totalViolations) {
+		this.totalViolations = totalViolations;
 	}
 
 	public String getContent() {
