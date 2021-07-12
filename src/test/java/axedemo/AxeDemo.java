@@ -1,20 +1,14 @@
 package axedemo;
 
 import java.io.IOException;
-import java.time.Duration;
 import java.util.List;
 
 import javax.naming.OperationNotSupportedException;
 
 import org.junit.Test;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.StaleElementReferenceException;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.support.ui.ExpectedCondition;
-import org.openqa.selenium.support.ui.FluentWait;
 
 import com.deque.html.axecore.extensions.WebDriverExtensions;
 import com.deque.html.axecore.results.Results;
@@ -29,13 +23,28 @@ public class AxeDemo {
 	@Test
 	public void testAccess() throws InterruptedException {
 
-		System.setProperty("webdriver.chrome.driver", "C:\\Users\\AC76894\\staf-data\\webdrivers\\chromedriver.exe");
+		System.setProperty("webdriver.chrome.driver", "C:\\Users\\AC76889\\staf-data\\webdrivers\\chromedriver.exe");
 		WebDriver driver = new ChromeDriver();
-		driver.manage().window().maximize();
-		driver.get("http://swiftenv4/");
-		Login.login();
-		waitForPageToLoad(driver, 60);
 
+		WebDriverWrapper wd = new WebDriverWrapper(driver, 20);
+
+		driver.manage().window().maximize();
+		driver.get("https://webtest1.lumen.com/login/");
+		wd.waitForPageToLoad(60);
+		wd.waitAndClick(By.id("continueBtn"));
+		wd.waitForPageToLoad(60);
+		By usrname = By.id("loginForm:username");
+		By pass = By.id("loginForm:password");
+		By loginBtn = By.id("loginForm:loginButton");
+		wd.waitAndSendKeys(usrname, "49089automationtest1@test1.control.centurylink.com");
+		wd.waitAndSendKeys(pass, "Qcontrol12345");
+		wd.waitAndClick(loginBtn);
+		wd.waitForPageToLoad(60);
+		By shop = By.cssSelector("a[href='#enterprise-drawer-6']");
+		wd.waitAndClick(shop);
+		By shop_drawer = By.xpath("//span[text()='Shop' and @class='chi-sidenav__title']");
+		wd.waitAndClick(shop_drawer);
+		wd.waitForPageToLoad(60);
 		try {
 			Results results = WebDriverExtensions.analyze(driver);
 			List<Rule> violations = results.getViolations();
@@ -63,20 +72,6 @@ public class AxeDemo {
 
 		System.err.println("done");
 		driver.quit();
-
-	}
-
-	private static void waitForPageToLoad(WebDriver driver, int timeInSeconds) {
-		ExpectedCondition<Boolean> expectation = new ExpectedCondition<Boolean>() {
-			public Boolean apply(WebDriver driver) {
-				return ((JavascriptExecutor) driver).executeScript("return document.readyState").equals("complete");
-			}
-		};
-		FluentWait<WebDriver> wait = new FluentWait<WebDriver>(driver).withTimeout(Duration.ofSeconds(timeInSeconds))
-				.pollingEvery(Duration.ofSeconds(1)).ignoring(NoSuchElementException.class)
-				.ignoring(StaleElementReferenceException.class).ignoring(WebDriverException.class);
-
-		wait.until(expectation);
 
 	}
 
